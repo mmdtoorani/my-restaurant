@@ -8,11 +8,13 @@ class Restaurant(models.Model):
     ITALIAN = 'Italian-restaurant'
     FRENCH = 'French-restaurant'
     CHINESE = 'Chinese-restaurant'
+    FASTFOOD = 'fastfood'
     category_choice = (
         (IRANIAN, 'Iranian restaurant'),
         (ITALIAN, 'Italian restaurant'),
         (FRENCH, 'French restaurant'),
-        (CHINESE, 'Chinese restaurant')
+        (CHINESE, 'Chinese restaurant'),
+        (FASTFOOD, 'fastfood')
     )
     category = models.CharField(
         max_length=30,
@@ -37,22 +39,9 @@ class Branch(models.Model):
         return self.name
 
 
-class Menu(models.Model):
-    branch = models.OneToOneField(Branch, on_delete=models.CASCADE)
-    image = models.ImageField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.branch.name}'s Menu"
-
-
-class MenuItem(models.Model):
-    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
-
-
 class Personnel(models.Model):
     account = models.OneToOneField(User, on_delete=models.CASCADE)
-    restaurant = models.ForeignKey(Branch, null=True, on_delete=models.SET_NULL)
+    branch = models.ForeignKey(Branch, null=True, on_delete=models.SET_NULL)
     personnel_id = models.IntegerField(unique=True)
 
     SERVANT = 'servant'
@@ -71,5 +60,23 @@ class Personnel(models.Model):
         help_text='please select a position in personnel'
     )
 
+    @property
+    def restaurant_name(self):
+        return self.branch.restaurant.name
+
     def __str__(self):
         return self.account.username
+
+
+class Menu(models.Model):
+    branch = models.OneToOneField(Branch, on_delete=models.CASCADE)
+    image = models.ImageField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.branch.name}'s Menu"
+
+
+class MenuItem(models.Model):
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+
