@@ -26,9 +26,3 @@ class MenuItemAdmin(admin.ModelAdmin):
 @admin.register(Personnel)
 class PersonnelAdmin(admin.ModelAdmin):
     pass
-
-
-@admin.register(Branch)
-class BranchAdmin(admin.ModelAdmin):
-    pass
-
