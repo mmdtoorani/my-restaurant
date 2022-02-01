@@ -41,6 +41,9 @@ class Menu(models.Model):
     branch = models.OneToOneField(Branch, on_delete=models.CASCADE)
     image = models.ImageField(null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.branch.name}'s Menu"
+
 
 class MenuItem(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
