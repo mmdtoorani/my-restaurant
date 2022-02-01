@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from food.models import Food
+
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=200)
@@ -31,7 +33,7 @@ class Branch(models.Model):
     address = models.TextField(max_length=250)
     city = models.CharField(max_length=200)
     phone = models.CharField(max_length=200)
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.PROTECT)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     description = models.TextField(max_length=250, null=True, blank=True)
     created = models.DateField(auto_now=True)
 
@@ -78,5 +80,8 @@ class Menu(models.Model):
 
 class MenuItem(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    food = models.OneToOneField(Food, null=True, on_delete=models.SET_NULL)
     price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
 
+    def __str__(self):
+        return f"{self.food.name} | {self.menu.branch.name}"
